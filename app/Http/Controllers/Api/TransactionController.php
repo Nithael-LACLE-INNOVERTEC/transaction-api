@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Category\CategoryRequest;
-use App\Http\Resources\CategoryResource;
-use App\Models\Category;
+use App\Http\Requests\Transaction\TransactionRequest;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\TransactionResource;
 use Symfony\Component\HttpFoundation\Response;
 
-class CategoryController extends Controller
+class TransactionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        // $result = Category::all();
-        $result = Category::select(['id', 'name'])->get();
-        // Get collection of resource categories
-        $result = CategoryResource::collection($result);
+        //
+        $result = Transaction::with('category')->get();
+        // Get collection of resource transactions
+        $result = TransactionResource::collection($result);
 
         // Return result
         return response()->json($result, Response::HTTP_ACCEPTED);
@@ -28,19 +28,19 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CategoryRequest $request)
+    public function store(TransactionRequest $request)
     {
         // Copy data in array
         $data = $request->validated();
 
-        // Create category in database
-        $category = Category::create($data);
+        // Create transaction in database
+        $transaction = Transaction::create($data);
 
         // Create resource
-        $category = new CategoryResource($category);
+        $transaction = new TransactionResource($transaction);
 
         // Return result
-        return response()->json($category, Response::HTTP_CREATED);
+        return response()->json($transaction, Response::HTTP_CREATED);
     }
 
     /**
@@ -49,12 +49,12 @@ class CategoryController extends Controller
     public function show($id)
     {
         // Find
-        $category = Category::find($id);
-        if (!$category)
+        $transaction = Transaction::find($id);
+        if (!$transaction)
             return response()->json(['message' => "L'information demandé n'existe pas"], Response::HTTP_NOT_FOUND);
 
         // Create resource
-        $result = new CategoryResource($category);
+        $result = new TransactionResource($transaction);
 
         // Return result
         return response()->json($result, Response::HTTP_ACCEPTED);
@@ -63,21 +63,21 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CategoryRequest $request, $id)
+    public function update(TransactionRequest $request, $id)
     {
         // Copy data in array
         $data = $request->validated();
 
         // Find
-        $category = Category::find($id);
-        if (!$category)
+        $transaction = Transaction::find($id);
+        if (!$transaction)
             return response()->json(['message' => "L'information demandé n'existe pas"], Response::HTTP_NOT_FOUND);
 
         // Update
-        $category->update($data);
+        $transaction->update($data);
 
         // Create resource
-        $result = new CategoryResource($category);
+        $result = new TransactionResource($transaction);
 
         // Return result
         return response()->json($result, Response::HTTP_ACCEPTED);
@@ -89,12 +89,12 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         // Find
-        $category = Category::find($id);
-        if (!$category)
+        $transaction = Transaction::find($id);
+        if (!$transaction)
             return response()->json(['message' => "L'information demandé n'existe pas"], Response::HTTP_NOT_FOUND);
 
         // Update
-        $category->delete();
+        $transaction->delete();
 
         // Return result
         return response()->json(["message" => "Suppression reussie"], Response::HTTP_OK);
