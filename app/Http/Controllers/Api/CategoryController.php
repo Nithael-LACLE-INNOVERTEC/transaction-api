@@ -34,10 +34,12 @@ class CategoryController extends Controller
         $data = $request->validated();
 
         // Create category in database
-        $category = Category::create($data);
+        // $category = Category::create($data + [ 'user_id' => auth()->id()]);
+        $category = auth()->user()->categories()->create($data);
 
         // Create resource
         $category = new CategoryResource($category);
+
 
         // Return result
         return response()->json($category, Response::HTTP_CREATED);

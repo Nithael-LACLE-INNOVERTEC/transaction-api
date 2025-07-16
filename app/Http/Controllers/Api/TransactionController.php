@@ -34,7 +34,8 @@ class TransactionController extends Controller
         $data = $request->validated();
 
         // Create transaction in database
-        $transaction = Transaction::create($data);
+        // $transaction = Transaction::create($data);
+        $transaction = auth()->user()->transactions()->create($data);
 
         // Create resource
         $transaction = new TransactionResource($transaction);
