@@ -37,7 +37,7 @@ class TransactionRequest extends FormRequest
     {
         return [
             'category_id.required' => "L':attribute est manquante",
-            'transaction_date.required' => "La :attribute est requis",
+            'transaction_date.required' => "La :attribute est requise",
             'amount.required' => "Le :attribute est requis",
 
             'transaction_date.date' => "la :attribute saisie est incorrecte (ex:" . now()->format('Y-m-d') . ")",
